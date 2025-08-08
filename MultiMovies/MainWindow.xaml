@@ -5,8 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MultiMovies"
         mc:Ignorable="d"
+        xmlns:vlc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
         Title="MainWindow" Height="450" Width="800">
+    
     <Grid>
-        
+        <vlc:VideoView Name="TestVideoView" />
     </Grid>
 </Window>
