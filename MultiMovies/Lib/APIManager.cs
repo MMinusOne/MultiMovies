@@ -27,13 +27,18 @@ namespace MultiMovies.Lib
 
         HttpClient client;
 
-        private string embedMovieBaseURL = "http://localhost:3500";
-        private string m3u8ServerBaseURL = "";
+        private string embedMovieBaseURL = "http://y488g8gggw8ooc84k4gk0kwo.158.220.110.26.sslip.io";
+        private string m3u8ServerBaseURL = "http://y88s8sk84cc8ccos4gc44gsw.158.220.110.26.sslip.io";
 
         public APIManager()
         {
             _instance = this;
             client = new HttpClient();
+        }
+
+        public string UseM3U8Proxy(string episodeM3U8Url)
+        {
+            return $"{m3u8ServerBaseURL}/?url={episodeM3U8Url}";
         }
 
         public async Task<TMDBSearchResult[]> GetPopular(string id, int page = 1)
