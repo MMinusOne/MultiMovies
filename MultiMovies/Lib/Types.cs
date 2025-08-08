@@ -69,7 +69,7 @@ namespace MultiMovies.Lib
         public string title { get; set; }
         public string image { get; set; }
         public string description { get; set; }
-        public EpisodeSource[] sources { get; set; }
+        public List<EpisodeSource> sources { get; set; }
     }
 
     public class EpisodeSource
