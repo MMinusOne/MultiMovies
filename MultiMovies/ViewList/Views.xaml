@@ -1,0 +1,23 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"               
+                    xmlns:vm="clr-namespace:MultiMovies.ViewModels"
+                    xmlns:v="clr-namespace:MultiMovies.Views"
+                    xmlns:global="clr-namespace:MultiMovies">
+
+    <DataTemplate DataType="{x:Type vm:MediaPlayerViewModel}">
+        <v:M3U8Player />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:HomeViewModel}">
+        <global:MainWindow/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:WatchPageViewModel}">
+        <v:WatchPage/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:SearchPageViewModel}">
+        <v:SearchPage/>
+    </DataTemplate>
+
+</ResourceDictionary>
