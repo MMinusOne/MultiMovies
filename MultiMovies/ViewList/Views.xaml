@@ -9,7 +9,7 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type vm:HomeViewModel}">
-        <global:MainWindow/>
+        <v:HomePage/>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type vm:WatchPageViewModel}">

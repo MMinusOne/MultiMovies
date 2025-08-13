@@ -1,6 +1,7 @@
 ﻿using MultiMovies.Lib;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ using System.Windows.Input;
 
 namespace MultiMovies.ViewModels
 {
-    internal class WatchPageViewModel : BaseVM, INotifyPropertyChanged
+    public class WatchPageViewModel : BaseVM, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -40,10 +41,30 @@ namespace MultiMovies.ViewModels
             set { _source = value; OnPropertyChanged(nameof(Source)); }
         }
 
-        WatchPageViewModel()
+        ICommand _serverSelectCommand;
+
+        public ICommand ServerSelectCommand
+        {
+
+            get
+            {
+                if (_serverSelectCommand == null)
+                {
+                    _serverSelectCommand = new RelayCommand(ServerSelectExecute, (object parameter) => true);
+                }
+                return _serverSelectCommand;
+            }
+        }
+
+        ObservableCollection<EpisodeSource> _sources;
+        public ObservableCollection<EpisodeSource> Sources { 
+        get { return _sources;  }
+            set { _sources = value; OnPropertyChanged(nameof(Sources)); }
+        }
+
+        public WatchPageViewModel()
         {
             _instance = this;
-            ServerSelectCommand = new RelayCommand(ServerSelectExecute, (object parameter) => { return true; });
             test();
         }
 
@@ -51,15 +72,16 @@ namespace MultiMovies.ViewModels
         {
             var movieDetails = await APIManager.Instance.GetStreamingUrls("400160");
             MovieDetails = movieDetails;
-            Source = movieDetails.sources[0];
+            Sources = MovieDetails.sources;
+            Source = movieDetails.sources[2];
             var url = APIManager.Instance.UseM3U8Proxy(Source.url);
             MediaPlayerViewModel.Instance.PlayStream(url);
         }
 
-        public ICommand ServerSelectCommand;
         void ServerSelectExecute(object obj)
         {
             var serverSelected = (EpisodeSource)obj;
+            Source = null;
             Source = serverSelected;
         }
 

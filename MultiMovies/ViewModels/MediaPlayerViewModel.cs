@@ -1,4 +1,5 @@
 ﻿using LibVLCSharp.Shared;
+using LibVLCSharp.WPF;
 using MultiMovies.Lib;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MultiMovies.ViewModels
 {
@@ -50,6 +52,61 @@ namespace MultiMovies.ViewModels
         {
             var media = new Media(_libVLC, url, FromType.FromLocation);
             _mediaplayer.Play(media);
+        }
+
+        public void SetSubtitleTrack(string track)
+        {
+            _mediaplayer.AddSlave(MediaSlaveType.Subtitle, track, true);
+        }
+
+        public MediaTrack[] GetQualities() {
+            var tracks = _mediaplayer.Media.Tracks;
+            return tracks;
+        }
+
+        public void SetTrack(int trackIndex)
+        {
+            _mediaplayer.SetVideoTrack(trackIndex);
+        }
+
+        public void SeekTo(TimeSpan time)
+        {
+            _mediaplayer.Time = (long)time.TotalMilliseconds;
+        }
+
+        public TimeSpan GetCurrentTime()
+        {
+            return TimeSpan.FromMilliseconds(_mediaplayer.Time);
+        }
+
+        public long GetMediaDuration()
+        {
+            return _mediaplayer.Media.Duration;
+        }
+
+        int _timeline;
+        public int Timeline { 
+        get { return _timeline; }
+            set { 
+                _timeline = value; 
+                OnPropertyChanged(nameof(Timeline));
+            }
+        }
+
+        ICommand _playPauseCommand;
+        public ICommand PlayPauseCommand
+        {
+            get
+            {
+                if (_playPauseCommand == null) {
+                    _playPauseCommand = new RelayCommand(PlayPauseExecute, (object parameter) => true);
+                }
+                return _playPauseCommand;
+            }
+        }
+
+        void PlayPauseExecute(object obj) {
+            _mediaplayer.Pause();
         }
 
         void OnClose(EventArgs e)
