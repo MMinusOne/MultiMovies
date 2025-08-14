@@ -49,7 +49,7 @@ namespace MultiMovies.ViewModels
 
         async void test()
         {
-            var movieDetails = await APIManager.Instance.GetStreamingUrls("335983");
+            var movieDetails = await APIManager.Instance.GetStreamingUrls("597");
             MovieDetails = movieDetails;
             
             Source = movieDetails.sources.Single(e=>e.server=="megacloud");

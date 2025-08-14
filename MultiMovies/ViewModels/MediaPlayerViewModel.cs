@@ -3,12 +3,14 @@ using LibVLCSharp.WPF;
 using MultiMovies.Lib;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Vlc.DotNet.Core.Interops.Signatures;
 
 namespace MultiMovies.ViewModels
 {
@@ -96,12 +98,6 @@ namespace MultiMovies.ViewModels
             _mediaplayer.AddSlave(MediaSlaveType.Subtitle, track, true);
         }
 
-        public MediaTrack[] GetQualities()
-        {
-            var tracks = _mediaplayer.Media.Tracks;
-            return tracks;
-        }
-
         public void SetTrack(int trackIndex)
         {
             _mediaplayer.SetVideoTrack(trackIndex);
@@ -110,6 +106,12 @@ namespace MultiMovies.ViewModels
         public void SeekTo(TimeSpan time)
         {
             _mediaplayer.Time = (long)time.TotalMilliseconds;
+        }
+
+
+        public void SetVolume(int volume)
+        {
+            _mediaplayer.Volume = volume;
         }
 
         public TimeSpan GetCurrentTime()
@@ -191,9 +193,33 @@ namespace MultiMovies.ViewModels
 
         void PlayPauseExecute(object obj)
         {
-            _mediaplayer.Pause();
+            if (_mediaplayer.IsPlaying) {
+                _mediaplayer.Pause();
+              } else { 
+                _mediaplayer.Play(); 
+            }
+            
             _timer.Stop();
 
+        }
+
+        int _volume = 50;
+        public int Volume
+        {
+            get { return _volume;  }
+            set
+            {
+                _volume = value;
+                SetVolume(_volume);
+                OnPropertyChanged(nameof(Volume));
+            }
+        }
+
+        ObservableCollection<string> _qualities = new ObservableCollection<string>();
+        public ObservableCollection<string> Qualities
+        {
+            get {  return _qualities; }
+            set { _qualities = value; OnPropertyChanged(nameof(Qualities)); }
         }
 
         void OnClose(EventArgs e)
