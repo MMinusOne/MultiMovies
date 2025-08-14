@@ -41,27 +41,6 @@ namespace MultiMovies.ViewModels
             set { _source = value; OnPropertyChanged(nameof(Source)); }
         }
 
-        ICommand _serverSelectCommand;
-
-        public ICommand ServerSelectCommand
-        {
-
-            get
-            {
-                if (_serverSelectCommand == null)
-                {
-                    _serverSelectCommand = new RelayCommand(ServerSelectExecute, (object parameter) => true);
-                }
-                return _serverSelectCommand;
-            }
-        }
-
-        ObservableCollection<EpisodeSource> _sources;
-        public ObservableCollection<EpisodeSource> Sources { 
-        get { return _sources;  }
-            set { _sources = value; OnPropertyChanged(nameof(Sources)); }
-        }
-
         public WatchPageViewModel()
         {
             _instance = this;
@@ -70,19 +49,13 @@ namespace MultiMovies.ViewModels
 
         async void test()
         {
-            var movieDetails = await APIManager.Instance.GetStreamingUrls("400160");
+            var movieDetails = await APIManager.Instance.GetStreamingUrls("335983");
             MovieDetails = movieDetails;
-            Sources = MovieDetails.sources;
-            Source = movieDetails.sources[2];
+            
+            Source = movieDetails.sources.Single(e=>e.server=="megacloud");
+            if (Source == null) Source = movieDetails.sources.Last();
             var url = APIManager.Instance.UseM3U8Proxy(Source.url);
             MediaPlayerViewModel.Instance.PlayStream(url);
-        }
-
-        void ServerSelectExecute(object obj)
-        {
-            var serverSelected = (EpisodeSource)obj;
-            Source = null;
-            Source = serverSelected;
         }
 
         void OnPropertyChanged(string propertyName)

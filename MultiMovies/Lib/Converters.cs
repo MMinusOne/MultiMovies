@@ -10,21 +10,20 @@ using System.Windows.Media;
 
 namespace MultiMovies.Lib.Converters
 {
-    public class ServerColorConverter : IValueConverter
+
+    public class DurationMSToDisplayableConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var source = (EpisodeSource)value;
-            if (source == null) return null;
-            if (WatchPageViewModel.Instance.Source == null) return null;
-            if (WatchPageViewModel.Instance.Source.server == source.server)
-            {
-                return Brushes.Red;
-            }
-            else
-            {
-                return Brushes.Green;
-            }
+
+            if (value == null) return "00:00:00";
+            var durationMS = (long)value; 
+            TimeSpan timespan = TimeSpan.FromMilliseconds(durationMS);
+
+            return string.Format("{0:D2}:{1:D2}:{2:D2}", 
+                (int)timespan.TotalHours, 
+                timespan.Minutes, 
+                timespan.Seconds);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -32,7 +31,6 @@ namespace MultiMovies.Lib.Converters
             throw new NotImplementedException();
         }
     }
-
     public class TruncateConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

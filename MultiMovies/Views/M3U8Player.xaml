@@ -6,17 +6,52 @@
              xmlns:local="clr-namespace:MultiMovies.Views"
              xmlns:vlc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
              xmlns:vm="clr-namespace:MultiMovies.ViewModels"
+             xmlns:cnv="clr-namespace:MultiMovies.Lib.Converters"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <cnv:DurationMSToDisplayableConverter x:Key="DurationMSToDisplayableConverter" />
+    </UserControl.Resources>
     <Grid>
+
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
+
         <vlc:VideoView Grid.Row="0" MediaPlayer="{Binding Source={x:Static vm:MediaPlayerViewModel.Instance}, Path=Mediaplayer}"/>
-        <StackPanel Grid.Row="1" Panel.ZIndex="10000">
-            <Slider Minimum="0" Maximum="100" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding Source={x:Static vm:MediaPlayerViewModel.Instance}, Path=Timeline}"/>
-            <Button Content="PlayPause" Command="{Binding Source={x:Static vm:MediaPlayerViewModel.Instance}, Path=PlayPauseCommand}" Margin="10"/>
-        </StackPanel>
+        
+        <Grid Grid.Row="1" Panel.ZIndex="1000" Background="Transparent" VerticalAlignment="Bottom">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="100*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Foreground="{DynamicResource TextPrimary}" FontWeight="SemiBold" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12" Text="{Binding Source={x:Static vm:MediaPlayerViewModel.Instance}, Path=CurrentTime, Converter={StaticResource DurationMSToDisplayableConverter}}"/>
+                <Slider Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding Source={x:Static vm:MediaPlayerViewModel.Instance}, Path=Timeline}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseUp">
+                            <i:InvokeCommandAction Command="{Binding Source={x:Static vm:MediaPlayerViewModel.Instance}, Path=TimelineRelease}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="PreviewMouseDown">
+                            <i:InvokeCommandAction Command="{Binding Source={x:Static vm:MediaPlayerViewModel.Instance}, Path=TimelineLock}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Slider>
+            </Grid>
+
+            <StackPanel Grid.Row="1" Orientation="Vertical" Margin="10,10,10,10">
+                <Button Command="{Binding Source={x:Static vm:MediaPlayerViewModel.Instance}, Path=PlayPauseCommand}" Margin="10">
+                    <Image Source="/Static/play.png"/>
+                </Button>
+            </StackPanel>  
+        </Grid>
+
     </Grid>
 </UserControl>

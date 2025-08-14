@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace MultiMovies.ViewModels
 {
@@ -38,6 +39,26 @@ namespace MultiMovies.ViewModels
             set { _mediaplayer = value; OnPropertyChanged(nameof(Mediaplayer)); }
         }
 
+        public long _duration;
+        public long Duration
+        {
+            get { return _duration; }
+            set { _duration = value; OnPropertyChanged(nameof(Duration)); ; }
+        }
+
+        public long _currentTime;
+        public long CurrentTime
+        {
+            get { return _currentTime; }
+            set { _currentTime = value; OnPropertyChanged(nameof(CurrentTime)); ; }
+        }
+
+        bool isUpdatingInternally = false;
+
+        private DispatcherTimer _timer;
+        private DispatcherTimer _timelineThrottle;
+
+
         public MediaPlayerViewModel()
         {
             _instance = this;
@@ -46,12 +67,28 @@ namespace MultiMovies.ViewModels
 
             _libVLC = new LibVLC();
             _mediaplayer = new MediaPlayer(_libVLC);
+
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromSeconds(1);
+            _timer.Tick += (s, e) =>
+            {
+                if (_mediaplayer.IsPlaying)
+                {
+                    isUpdatingInternally = true;
+                    CurrentTime = _mediaplayer.Time;
+                    Duration = _mediaplayer.Media.Duration;
+                    if (!TimelineLocked) Timeline = (int)((CurrentTime / (double)Duration) * 100);
+                    isUpdatingInternally = false;
+                }
+            };
+
         }
 
         public void PlayStream(string url)
         {
             var media = new Media(_libVLC, url, FromType.FromLocation);
             _mediaplayer.Play(media);
+            _timer.Start();
         }
 
         public void SetSubtitleTrack(string track)
@@ -59,7 +96,8 @@ namespace MultiMovies.ViewModels
             _mediaplayer.AddSlave(MediaSlaveType.Subtitle, track, true);
         }
 
-        public MediaTrack[] GetQualities() {
+        public MediaTrack[] GetQualities()
+        {
             var tracks = _mediaplayer.Media.Tracks;
             return tracks;
         }
@@ -84,35 +122,86 @@ namespace MultiMovies.ViewModels
             return _mediaplayer.Media.Duration;
         }
 
+
         int _timeline;
-        public int Timeline { 
-        get { return _timeline; }
-            set { 
-                _timeline = value; 
+        public int Timeline
+        {
+            get { return _timeline; }
+            set
+            {
+                _timeline = value;
                 OnPropertyChanged(nameof(Timeline));
             }
         }
+
+        bool TimelineLocked = false;
+
+        ICommand _timelineLock;
+        public ICommand TimelineLock
+        {
+            get
+            {
+                if (_timelineLock == null)
+                {
+                    _timelineLock = new RelayCommand(TimelineLockExecute, (object e) => true);
+                }
+                return _timelineLock;
+            }
+        }
+
+        void TimelineLockExecute(object e)
+        {
+            TimelineLocked = true;
+        }
+
+
+        ICommand _timelineRelease;
+        public ICommand TimelineRelease
+        {
+            get
+            {
+                if (_timelineRelease == null)
+                {
+                    _timelineRelease = new RelayCommand(TimelineReleaseExecute, (object e) => true);
+                }
+                return _timelineRelease;
+            }
+        }
+
+        void TimelineReleaseExecute(object e)
+        {
+            long seekTime = (long)((Timeline / 100.0) * Duration);
+            SeekTo(TimeSpan.FromMilliseconds(seekTime));
+            TimelineLocked = false;
+        }
+
 
         ICommand _playPauseCommand;
         public ICommand PlayPauseCommand
         {
             get
             {
-                if (_playPauseCommand == null) {
+                if (_playPauseCommand == null)
+                {
                     _playPauseCommand = new RelayCommand(PlayPauseExecute, (object parameter) => true);
                 }
                 return _playPauseCommand;
             }
         }
 
-        void PlayPauseExecute(object obj) {
+        void PlayPauseExecute(object obj)
+        {
             _mediaplayer.Pause();
+            _timer.Stop();
+
         }
 
         void OnClose(EventArgs e)
         {
             _mediaplayer.Dispose();
             _libVLC.Dispose();
+            _timer.Stop();
+
         }
 
         void OnPropertyChanged(string propertyName)
