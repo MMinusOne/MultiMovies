@@ -20,11 +20,13 @@ namespace MultiMovies
     /// </summary>
     public partial class MainWindow : Window
     {
+    
+
         public MainWindow()
         {
             InitializeComponent();
 
-            MainFrame.Navigate(new MultiMovies.Views.WatchPage());
+            MainFrame.Navigate(new MultiMovies.Views.HomePage());
         }
     }
 }

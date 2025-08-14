@@ -6,13 +6,49 @@
       xmlns:local="clr-namespace:MultiMovies.Views"
       xmlns:vm="clr-namespace:MultiMovies.ViewModels"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="SearchPage">
+      d:DesignHeight="1000" d:DesignWidth="1000"
+      Title="Search Page">
 
-    <Grid>
-        <ScrollViewer>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-            <ItemsControl HorizontalAlignment="Left" ItemsSource="{Binding Source={x:Static vm:SearchPageViewModel.Instance}, Path=MoviesResults}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0" x:Name="SearchBox"
+                     Style="{DynamicResource SearchBox}"
+                     Tag="Search..."
+                     HorizontalAlignment="Stretch"/>
+
+            <Button Grid.Column="1" Content="Search" Style="{DynamicResource NormalButton}" Click="Search_Click" />
+        </Grid>
+
+        <StackPanel HorizontalAlignment="Center"
+                    Orientation="Horizontal"
+                    Grid.Column="1">
+            <TextBlock Text="Search results for: "
+                       Foreground="{DynamicResource TextPrimary}"
+                       FontSize="25"/>
+            <TextBlock Text="{Binding Source={x:Static vm:SearchPageViewModel.Instance}, Path=Query, UpdateSourceTrigger=PropertyChanged}"
+                       Foreground="LightGreen"
+                       TextWrapping="Wrap"
+                       FontSize="25"/>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" Grid.ColumnSpan="3" Margin="0 20 0 0">
+            <ItemsControl HorizontalAlignment="Center" ItemsSource="{Binding Source={x:Static vm:SearchPageViewModel.Instance}, Path=MoviesResults}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel Orientation="Horizontal"/>
@@ -20,11 +56,35 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Grid Margin="10,10,10,10" Width="150px" Height="200px" Background="{DynamicResource BackgroundBase200}">
-                            <Border CornerRadius="200" BorderBrush="Transparent" BorderThickness="2">
-                                <Image Source="{Binding poster_path}" Stretch="Fill" />
-                            </Border>
-                        </Grid>
+                        <Button Width="180" Margin="0,0,10,30"
+                                Padding="0"
+                                BorderThickness="0"
+                                Background="Transparent"
+                                Cursor="Hand"
+                                Style="{DynamicResource NormalButton}"
+                                VerticalAlignment="Top"
+                                Click="Card_Click"
+                                CommandParameter="{Binding .}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+
+                                <Image Source="{Binding poster_path}" Stretch="UniformToFill" />
+
+                                <TextBlock Grid.Row="1"
+                                           Text="{Binding title}"
+                                           Foreground="{DynamicResource TextPrimary}"
+                                           Opacity="0.65"
+                                           FontWeight="Bold"
+                                           VerticalAlignment="Bottom"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,0,0,20"
+                                           FontSize="18"
+                                           TextWrapping="Wrap" />
+                            </Grid>
+                        </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

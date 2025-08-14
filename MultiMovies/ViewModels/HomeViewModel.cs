@@ -1,6 +1,7 @@
 ﻿using MultiMovies.Lib;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -58,6 +59,19 @@ namespace MultiMovies.ViewModels
             //    if (movie.vote_average > PopularMovie.vote_average)
             //        PopularMovie = movie;
             //}
+
+            MovieCards = popularMovies;
+        }
+
+        private ObservableCollection<TMDBSearchResult> _movieCards;
+        public ObservableCollection<TMDBSearchResult> MovieCards
+        {
+            get => _movieCards;
+            set
+            {
+                _movieCards = value;
+                OnPropertyChanged();
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -13,18 +13,16 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="500px"/>
+            <RowDefinition Height="50"/>
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Margin="10,10,10,10">
+        <Grid Row="0">
+            
+        </Grid>
+        <Grid Grid.Row="1" Margin="10,10,10,10">
             <local:M3U8Player />
         </Grid>
-        <Grid Grid.Row="1">
-            <StackPanel>
-                <TextBlock FontWeight="Bold" FontSize="15" Margin="10,10,0,0" Text="{Binding Source={x:Static vm:WatchPageViewModel.Instance}, Path=MovieDetails.tmdbTitle}" Foreground="{DynamicResource TextPrimary}"/>
-                <TextBlock FontSize="10" Margin="10,10,0,0" TextWrapping="Wrap" Text="{Binding Source={x:Static vm:WatchPageViewModel.Instance}, Path=MovieDetails.description}" Foreground="{DynamicResource TextPrimary}"/>
-            </StackPanel>
-        </Grid>
+     
     </Grid>
 </Page>

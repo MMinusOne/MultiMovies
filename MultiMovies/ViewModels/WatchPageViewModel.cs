@@ -44,12 +44,11 @@ namespace MultiMovies.ViewModels
         public WatchPageViewModel()
         {
             _instance = this;
-            test();
         }
 
-        async void test()
+        public async Task SetMovie(string movieId)
         {
-            var movieDetails = await APIManager.Instance.GetStreamingUrls("597");
+            var movieDetails = await APIManager.Instance.GetStreamingUrls(movieId);
             MovieDetails = movieDetails;
             
             Source = movieDetails.sources.Single(e=>e.server=="megacloud");

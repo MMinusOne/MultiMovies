@@ -86,6 +86,15 @@ namespace MultiMovies.ViewModels
 
         }
 
+        bool _isPlaying;
+        public bool IsPlaying {
+            get => _isPlaying;
+            set
+            {
+                _isPlaying = value;
+                OnPropertyChanged(nameof(IsPlaying));
+            }
+        }
         public void PlayStream(string url)
         {
             var media = new Media(_libVLC, url, FromType.FromLocation);
@@ -195,8 +204,10 @@ namespace MultiMovies.ViewModels
         {
             if (_mediaplayer.IsPlaying) {
                 _mediaplayer.Pause();
-              } else { 
-                _mediaplayer.Play(); 
+                IsPlaying = true;
+            } else { 
+                _mediaplayer.Play();
+                IsPlaying = false;
             }
             
             _timer.Stop();

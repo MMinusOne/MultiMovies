@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MultiMovies.Lib;
+using MultiMovies.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,34 @@ namespace MultiMovies.Views
         public HomePage()
         {
             InitializeComponent();
+
+        }
+
+        private async void Search_Click(object sender, RoutedEventArgs e)
+        {
+            string query = SearchBox.Text;
+            var vm = SearchPageViewModel.Instance;
+            await vm.PerformSearch(query);
+
+            this.NavigationService.Navigate(new SearchPage());
+        }
+
+        private async void Card_Click(object sender, RoutedEventArgs e)
+        {
+            var button = (System.Windows.Controls.Button)sender;
+            var vm = WatchPageViewModel.Instance;
+            var selected = (TMDBSearchResult)button.CommandParameter;
+            this.NavigationService.Navigate(new WatchPage());
+            await vm.SetMovie(selected.id);
+        }
+
+        private async void Watch_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            var button = (System.Windows.Controls.Button)sender;
+            var vm = WatchPageViewModel.Instance;
+            var selected = (TMDBSearchResult)button.CommandParameter;
+            this.NavigationService.Navigate(new WatchPage());
+            await vm.SetMovie(selected.id);
         }
     }
 }

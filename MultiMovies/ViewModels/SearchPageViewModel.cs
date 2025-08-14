@@ -25,6 +25,20 @@ namespace MultiMovies.ViewModels
         }
         private ObservableCollection<TMDBSearchResult> _moviesResults = new ObservableCollection<TMDBSearchResult> { };
 
+        private string _query;
+        public string Query
+        {
+            get => _query;
+            set
+            {
+                if (_query != value)
+                {
+                    _query = value;
+                    OnPropertyChanged(nameof(Query));
+                }
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ObservableCollection<TMDBSearchResult> MoviesResults
@@ -35,24 +49,38 @@ namespace MultiMovies.ViewModels
 
         public SearchPageViewModel()
         {
-
             _instance = this;
-            test();
         }
 
-        async void test()
+        //async void test()
+        //{
+        //    await Search("Titanic");
+        //}
+
+        public async Task PerformSearch(string query)
         {
-            await Search("Titanic");
+            Query = query;
+            await SearchForMovie();
         }
 
-        async Task<ObservableCollection<TMDBSearchResult>> Search(string query)
+        private async Task SearchForMovie()
         {
+            if (string.IsNullOrWhiteSpace(Query)) return;
+
             MoviesResults = new ObservableCollection<TMDBSearchResult>();
-            var searchResults = await APIManager.Instance.SearchMovies(query);
+            var searchResults = await APIManager.Instance.SearchMovies(Query);
             MoviesResults = searchResults;
             OnPropertyChanged(nameof(MoviesResults));
-            return searchResults;
         }
+
+        //async Task<ObservableCollection<TMDBSearchResult>> Search(string query)
+        //{
+        //    MoviesResults = new ObservableCollection<TMDBSearchResult>();
+        //    var searchResults = await APIManager.Instance.SearchMovies(query);
+        //    MoviesResults = searchResults;
+        //    OnPropertyChanged(nameof(MoviesResults));
+        //    return searchResults;
+        //}
 
         void OnPropertyChanged(string propertyName)
         {
