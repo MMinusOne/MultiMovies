@@ -53,12 +53,10 @@
                     <Slider Value="{Binding Source={x:Static vm:MediaPlayerViewModel.Instance}, Path=Volume}" VerticalAlignment="Center" HorizontalAlignment="Center" Minimum="0" Maximum="100" Width="100" Margin="5,5,5,5" />
                 </StackPanel>
                 <Button Width="50" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding Source={x:Static vm:MediaPlayerViewModel.Instance}, Path=PlayPauseCommand}">
-                 
                         <Image Source="{Binding Source={x:Static vm:MediaPlayerViewModel.Instance}, Path=IsPlaying, Converter={StaticResource PausedToImageConverter}}" Width="20" Height="20"/>
-
                 </Button>
-                
-            </Grid>  
+                <ComboBox SelectedItem="{Binding Source={x:Static vm:MediaPlayerViewModel.Instance}, Path=CurrentSubtitleLabel}" HorizontalAlignment="Right" VerticalAlignment="Center" ItemsSource="{Binding Source={x:Static vm:MediaPlayerViewModel.Instance}, Path=SubtitleLabels, Mode=TwoWay}"></ComboBox>
+            </Grid>     
         </Grid>
 
     </Grid>

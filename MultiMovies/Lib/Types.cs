@@ -80,7 +80,7 @@ namespace MultiMovies.Lib
         public string url { get; set; }
         public bool isM3U8 { get; set; }
         public string quality { get; set; }
-        public Subtitle[] subtitles { get; set; }
+        public ObservableCollection<Subtitle> subtitles { get; set; }
     }
 
     public class Subtitle

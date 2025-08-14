@@ -55,6 +55,7 @@ namespace MultiMovies.ViewModels
             if (Source == null) Source = movieDetails.sources.Last();
             var url = APIManager.Instance.UseM3U8Proxy(Source.url);
             MediaPlayerViewModel.Instance.PlayStream(url);
+            MediaPlayerViewModel.Instance.SetSubtitles(Source.subtitles);
         }
 
         void OnPropertyChanged(string propertyName)

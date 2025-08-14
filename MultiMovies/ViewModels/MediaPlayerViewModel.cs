@@ -31,7 +31,7 @@ namespace MultiMovies.ViewModels
                 return _instance;
             }
         }
-
+        
 
         private LibVLC _libVLC;
         private MediaPlayer _mediaplayer;
@@ -240,6 +240,54 @@ namespace MultiMovies.ViewModels
             _timer.Stop();
 
         }
+
+        ObservableCollection<Subtitle> _subtitles;
+        public ObservableCollection<Subtitle> Subtitles
+        {
+
+            get { return _subtitles; }
+            set
+            {
+                _subtitles = value;
+                OnPropertyChanged(nameof(Subtitles));
+            }
+        }
+
+        ObservableCollection<string> _subtitlesLabels;
+        public ObservableCollection<string> SubtitleLabels
+        {
+
+            get { return _subtitlesLabels; }
+            set
+            {
+                _subtitlesLabels = value;
+                OnPropertyChanged(nameof(SubtitleLabels));
+            }
+        }
+
+        string _currentSubtitleLabel;
+        public string CurrentSubtitleLabel
+        {
+            get => _currentSubtitleLabel;
+            set {
+                _currentSubtitleLabel = value;
+                var subtitle = Subtitles.SingleOrDefault(e => e.label == value);
+                SetSubtitleTrack(subtitle.file);
+                OnPropertyChanged(nameof(CurrentSubtitleLabel));
+            }
+        }
+
+        public void SetSubtitles(ObservableCollection<Subtitle> subtitles)
+        {
+            Subtitles = subtitles;
+            var subtitleLabels = new ObservableCollection<string>();
+            foreach(var subtitle in subtitles)
+            {
+                subtitleLabels.Add(subtitle.label);
+            }
+            SubtitleLabels = subtitleLabels;
+        }
+
 
         void OnPropertyChanged(string propertyName)
         {
