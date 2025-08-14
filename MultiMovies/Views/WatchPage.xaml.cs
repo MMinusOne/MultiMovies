@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MultiMovies.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,13 @@ namespace MultiMovies.Views
         public WatchPage()
         {
             InitializeComponent();
+        }
+
+        private void GoHome_Click(object sender, RoutedEventArgs e)
+        {
+            var mediaPlayerVM = MediaPlayerViewModel.Instance;
+            mediaPlayerVM.OnEnd();
+            this.NavigationService.Navigate(new HomePage());
         }
     }
 }

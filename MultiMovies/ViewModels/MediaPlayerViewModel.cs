@@ -233,11 +233,21 @@ namespace MultiMovies.ViewModels
             set { _qualities = value; OnPropertyChanged(nameof(Qualities)); }
         }
 
-        void OnClose(EventArgs e)
+
+        public void OnEnd()
+        {
+            Timeline = 0;
+            SubtitleLabels = new ObservableCollection<string>();
+            CurrentSubtitleLabel = null;
+            Subtitles = new ObservableCollection<Subtitle>();
+            IsPlaying = false;
+            _timer.Stop();
+            _mediaplayer.Time = 0;
+        }
+        public void OnClose()
         {
             _mediaplayer.Dispose();
             _libVLC.Dispose();
-            _timer.Stop();
 
         }
 
@@ -272,7 +282,10 @@ namespace MultiMovies.ViewModels
             set {
                 _currentSubtitleLabel = value;
                 var subtitle = Subtitles.SingleOrDefault(e => e.label == value);
-                SetSubtitleTrack(subtitle.file);
+                if (subtitle != null)
+                {
+                    SetSubtitleTrack(subtitle.file);
+                };
                 OnPropertyChanged(nameof(CurrentSubtitleLabel));
             }
         }

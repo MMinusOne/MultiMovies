@@ -18,7 +18,7 @@
         </Grid.RowDefinitions>
 
         <Grid Row="0">
-            
+            <Button Click="GoHome_Click" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,10,10,10" Foreground="{DynamicResource TextPrimary}" Background="{DynamicResource BackgroundBase200}">Home</Button>
         </Grid>
         <Grid Grid.Row="1" Margin="10,10,10,10">
             <local:M3U8Player />
