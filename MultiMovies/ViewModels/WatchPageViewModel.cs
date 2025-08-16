@@ -49,6 +49,8 @@ namespace MultiMovies.ViewModels
         public async Task SetMovie(string movieId)
         {
             var movieDetails = await APIManager.Instance.GetStreamingUrls(movieId);
+            if (movieDetails == null) return;
+            
             MovieDetails = movieDetails;
             
             Source = movieDetails.sources.Single(e=>e.server=="megacloud");

@@ -69,6 +69,7 @@ namespace MultiMovies.ViewModels
 
             MoviesResults = new ObservableCollection<TMDBSearchResult>();
             var searchResults = await APIManager.Instance.SearchMovies(Query);
+            if (searchResults == null) return;
             MoviesResults = searchResults;
             OnPropertyChanged(nameof(MoviesResults));
         }

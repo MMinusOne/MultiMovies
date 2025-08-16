@@ -51,14 +51,10 @@ namespace MultiMovies.ViewModels
         {
             var popularMovies = await APIManager.Instance.GetPopular();
 
+            if (popularMovies == null) return;
+
             // Get random movie from popular movies
             PopularMovie = popularMovies[_rand.Next(popularMovies.Count)];
-
-            //foreach (var movie in popularMovies)
-            //{
-            //    if (movie.vote_average > PopularMovie.vote_average)
-            //        PopularMovie = movie;
-            //}
 
             MovieCards = popularMovies;
         }
