@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -95,9 +96,13 @@ namespace MultiMovies.ViewModels
                 OnPropertyChanged(nameof(IsPlaying));
             }
         }
+
+        string CurrentStreamUrl;
+
         public void PlayStream(string url)
         {
             var media = new Media(_libVLC, url, FromType.FromLocation);
+            CurrentStreamUrl = url;
             _mediaplayer.Play(media);
             _timer.Start();
         }
@@ -249,6 +254,43 @@ namespace MultiMovies.ViewModels
             _mediaplayer.Dispose();
             _libVLC.Dispose();
 
+        }
+
+        ICommand _downloadCommand;
+        public ICommand DownloadCommand
+        {
+            get
+            {
+                if(_downloadCommand == null)
+                {
+                    _downloadCommand = new RelayCommand(DownloadExecute, (object e) => true);
+                }
+
+                return _downloadCommand;
+            }
+        }
+
+        public void DownloadExecute(object obj)
+        {
+            string outputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyVideos), "MultiMovies", "Downloads");
+            var dupLibVLC = new LibVLC(new string[] { "--no-video-title-show", "--quiet" });
+            var dupMediaPlayer = new MediaPlayer(dupLibVLC);
+            if (CurrentStreamUrl == null) return;
+            using (var media = new Media(_libVLC, CurrentStreamUrl, FromType.FromLocation))
+            {
+                media.AddOption("($\":sout=#transcode{{vcodec=h264,acodec=mp4a}}:standard{{access=file,mux=mp4,dst={outputFilePath}}}\"");
+                media.AddOption(":no-sout-all");
+                media.AddOption(":sout-keep");
+
+                dupMediaPlayer.Play(media);
+
+                while (dupMediaPlayer.IsPlaying)
+                {
+                    System.Threading.Thread.Sleep(1000);
+                }
+
+                dupMediaPlayer.Dispose();
+            }
         }
 
         ObservableCollection<Subtitle> _subtitles;
