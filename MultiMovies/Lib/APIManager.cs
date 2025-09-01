@@ -28,8 +28,8 @@ namespace MultiMovies.Lib
 
         HttpClient client;
 
-        private string embedMovieBaseURL = "http://y488g8gggw8ooc84k4gk0kwo.158.220.110.26.sslip.io";
-        //private string embedMovieBaseURL = "http://localhost:3500";
+        //private string embedMovieBaseURL = "http://y488g8gggw8ooc84k4gk0kwo.158.220.110.26.sslip.io";
+        private string embedMovieBaseURL = "http://localhost:3500";
 
         //private string m3u8ServerBaseURL = "";
         private string m3u8ServerBaseURL = "http://127.0.0.1:8080";
