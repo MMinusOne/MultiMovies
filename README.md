@@ -14,9 +14,9 @@ It also shows popular movies cards below the most popular movie poster.
 
 
 ## Search page 
-![Search Page](./images/MultiMovies-2.png)
+![Search Page](./Images/MultiMovies-2.png)
 
 ## Watch page 
-![Watch Page](./images/MultiMovies-3.png)
+![Watch Page](./Images/MultiMovies-3.png)
 
 You can watch, pause, adjust volume, and set subtitles from English, Russian, Spanish and more on some movies at super high quality that is adjusted based on the network's speed.
