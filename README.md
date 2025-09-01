@@ -7,7 +7,7 @@ MultiMovies is a pirated movies streaming service with full subtitle support tha
 It relies upon the [Rust Proxy](https://github.com/MMinusOne/rust-proxy) and [Embed Movie](https://github.com/MMinusOne/embed-movie) and [Lib VLC Sharp](https://github.com/videolan/libvlcsharp) APIs.
 
 ## Front page
-![Front Page](./images/MultiMovies-1.png)
+![Front Page](./Images/MultiMovies-1.png)
 
 
 It also shows popular movies cards below the most popular movie poster.
